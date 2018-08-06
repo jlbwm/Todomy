@@ -12,7 +12,6 @@
         <!--Todomy-->
         <scene sceneID="LRX-PG-12w">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="g4F-by-fme" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="5Ak-N5-YBg" customClass="TodoListViewController" customModule="Todomy" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="LBe-s9-I5O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -33,8 +32,16 @@
                             <outlet property="delegate" destination="5Ak-N5-YBg" id="XPI-aK-crg"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todomy" id="Okg-Vg-oK9"/>
+                    <navigationItem key="navigationItem" title="Todomy" id="Okg-Vg-oK9">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="RAp-PH-iGF">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addButtonPressed:" destination="5Ak-N5-YBg" id="4vJ-I3-pLc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="g4F-by-fme" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-604" y="-558"/>
         </scene>
