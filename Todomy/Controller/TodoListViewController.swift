@@ -7,21 +7,24 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
-
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 
         loadItems()
     }
 
-    //Table View dataSource methods
+    // MARK: - Table View dataSource methods
     override func numberOfSections(in tableView: UITableView) -> Int {
         
         return 1
@@ -32,21 +35,18 @@ class TodoListViewController: UITableViewController {
         return itemArray.count
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
 
         cell.textLabel?.text = itemArray[indexPath.row].title
         
-       
         cell.accessoryType = itemArray[indexPath.row].done ? .checkmark : .none
         
-
         return cell
     }
     
 
-    //Table View delegate methods
+    // MARK: - Table View delegate methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -55,7 +55,6 @@ class TodoListViewController: UITableViewController {
         saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
-        
     }
     
     
@@ -69,22 +68,18 @@ class TodoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default)
         { (action) in
-            
-            let newItem = Item()
+
+            let newItem = Item(context: self.context)
         
             if let textField = textField.text
             {
                 newItem.title = textField
+                newItem.done = false
                 
                 self.itemArray.append(newItem)
                 
-                //self.defaults.set(self.itemArray, forKey: "TodoListArray")
-                //会导致崩溃，UserDefault 不接受用户定义的类，结构数组，字典等。
-                
                 self.saveItems()
             }
-            
-            
         }
         
         alert.addAction(action)
@@ -98,42 +93,33 @@ class TodoListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
-   
     // MARK: - Model Manupulation Methods
     func saveItems()
     {
-        let encoder = PropertyListEncoder()
-        
         do
         {
-            let data = try encoder.encode(itemArray)
-            
-            try data.write(to: dataFilePath!)
-            
+            try context.save()
         }
             
         catch
         {
-            print("Error encoding item array, \(error)")
+            print("Error saving context \(error)")
         }
-        
         
         self.tableView.reloadData()
     }
     
     func loadItems()
     {
-        if let data = try? Data(contentsOf: dataFilePath!)
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        do
         {
-            let deCoder = PropertyListDecoder()
-            
-            do{
-                itemArray = try deCoder.decode([Item].self, from: data)
-            }
-            catch
-            {
-                print("Error decoding error, \(error)")
-            }
+            itemArray = try context.fetch(request)
+        }
+        catch
+        {
+            print("Error fetching from the context \(error)")
         }
     }
 
