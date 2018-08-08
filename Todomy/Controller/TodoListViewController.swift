@@ -11,17 +11,26 @@ import CoreData
 
 class TodoListViewController: UITableViewController {
     
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     var itemArray = [Item]()
     
+    var selectedCategory: Category?
+    {
+        didSet{
+            loadItems()
+        }
+    }
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-
-        loadItems()
+        searchBar.delegate = self
+        
+        //loadItems()
     }
 
     // MARK: - Table View dataSource methods
@@ -66,7 +75,7 @@ class TodoListViewController: UITableViewController {
         
         let alert = UIAlertController(title: "Add New Todomy Item", message: "", preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "Add Item", style: .default)
+        let addAction = UIAlertAction(title: "Add Item", style: .default)
         { (action) in
 
             let newItem = Item(context: self.context)
@@ -76,13 +85,19 @@ class TodoListViewController: UITableViewController {
                 newItem.title = textField
                 newItem.done = false
                 
+                newItem.parentCategory = self.selectedCategory
+                
                 self.itemArray.append(newItem)
                 
                 self.saveItems()
             }
         }
         
-        alert.addAction(action)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        
+        alert.addAction(addAction)
+        alert.addAction(cancelAction)
         
         alert.addTextField{ (alertTextField) in
             alertTextField.placeholder = "Create new item"
@@ -92,6 +107,7 @@ class TodoListViewController: UITableViewController {
         
         present(alert, animated: true, completion: nil)
     }
+    
     
     // MARK: - Model Manupulation Methods
     func saveItems()
@@ -109,9 +125,18 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems()
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil)
     {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let additionalPredicate = predicate
+        {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        }
+        else
+        {
+            request.predicate = categoryPredicate
+        }
         
         do
         {
@@ -121,6 +146,41 @@ class TodoListViewController: UITableViewController {
         {
             print("Error fetching from the context \(error)")
         }
+        
+        tableView.reloadData()
     }
+}
 
+// MARK: - SearchBar Delegate Methods
+
+extension TodoListViewController: UISearchBarDelegate
+{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        let sortDescriptr = NSSortDescriptor(key: "title", ascending: true)
+        
+        request.sortDescriptors = [sortDescriptr]
+        
+        loadItems(with: request, predicate: predicate)
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchBar.text?.count == 0
+        {
+            loadItems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+    }
+    
+    
 }
