@@ -8,8 +8,10 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: UITableViewController {
+
+class CategoryViewController: SwipeTableViewController{
     
     let realm = try! Realm()
     
@@ -19,6 +21,10 @@ class CategoryViewController: UITableViewController {
         super.viewDidLoad()
         
         loadCategories()
+        
+        tableView.rowHeight = 80
+        
+        tableView.separatorStyle = .none
     }
     
     
@@ -30,9 +36,18 @@ class CategoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No categories added yet"
+        
+        if let colorString = categoryArray?[indexPath.row].hasColor
+        {
+            cell.backgroundColor = UIColor(hexString: colorString)
+            
+            guard let color = UIColor(hexString: colorString) else {fatalError()}
+            
+            cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true )
+        }
         
         return cell
     }
@@ -75,7 +90,8 @@ class CategoryViewController: UITableViewController {
             {
                 newCategory.name = text
                 
-                //self.categoryArray.append(newCategory) //auto update
+                newCategory.hasColor = UIColor.randomFlat.hexValue()
+                
                 
                 self.save(category: newCategory)
             }
@@ -123,5 +139,29 @@ class CategoryViewController: UITableViewController {
        
     }
     
+    // MARK: - Delete data from swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let selectedCategory = self.categoryArray?[indexPath.row]
+        {
+            do
+            {
+                try self.realm.write
+                {
+                    self.realm.delete(selectedCategory)
+                }
+            }
+            catch
+            {
+                print("Error deleting context \(error)")
+                
+            }
+        }
+        
+    }
+    
     
 }
+
+
