@@ -15,6 +15,7 @@
 		96574F6F2119000D0002157D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96574F6E2119000D0002157D /* Assets.xcassets */; };
 		96574F722119000D0002157D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96574F702119000D0002157D /* LaunchScreen.storyboard */; };
 		96574F7A2119017B0002157D /* TodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96574F792119017B0002157D /* TodoListViewController.swift */; };
+		969372DA211C2F26003A4304 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969372D9211C2F26003A4304 /* SwipeTableViewController.swift */; };
 		96F3794A211BF78400FDC03B /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F37949211BF78400FDC03B /* Item.swift */; };
 		96F3794C211BF79800FDC03B /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3794B211BF79800FDC03B /* Category.swift */; };
 /* End PBXBuildFile section */
@@ -30,6 +31,7 @@
 		96574F712119000D0002157D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		96574F732119000D0002157D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96574F792119017B0002157D /* TodoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewController.swift; sourceTree = "<group>"; };
+		969372D9211C2F26003A4304 /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 		96F37949211BF78400FDC03B /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		96F3794B211BF79800FDC03B /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		B1DC46EAAB948AEDEBBFA955 /* Pods_Todomy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Todomy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,8 +70,9 @@
 		9650DAE02119316800D28ED4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				9650DAE6211A94A400D28ED4 /* CategoryViewController.swift */,
 				96574F792119017B0002157D /* TodoListViewController.swift */,
+				9650DAE6211A94A400D28ED4 /* CategoryViewController.swift */,
+				969372D9211C2F26003A4304 /* SwipeTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -227,13 +230,17 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Todomy/Pods-Todomy-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeCellKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -251,6 +258,7 @@
 				9650DAE7211A94A400D28ED4 /* CategoryViewController.swift in Sources */,
 				96574F7A2119017B0002157D /* TodoListViewController.swift in Sources */,
 				96574F682119000C0002157D /* AppDelegate.swift in Sources */,
+				969372DA211C2F26003A4304 /* SwipeTableViewController.swift in Sources */,
 				96F3794C211BF79800FDC03B /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,6 +407,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7WNP7L6966;
 				INFOPLIST_FILE = Todomy/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -418,6 +427,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7WNP7L6966;
 				INFOPLIST_FILE = Todomy/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
